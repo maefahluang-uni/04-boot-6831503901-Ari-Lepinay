@@ -19,18 +19,31 @@ public class UserController {
 
    
     public ResponseEntity<String> registerUser( User user) {
-      //TODO
-      return null;
+      if (user == null || user.getUsername() == null || user.getUsername().isBlank()) {
+        return new ResponseEntity<>("Invalid user", HttpStatus.BAD_REQUEST);
+    }
+
+    if (users.containsKey(user.getUsername())) {
+        return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+    }
+
+    users.put(user.getUsername(), user);
+    return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+
     }
 
     public ResponseEntity<Collection<User>> list() {
         //TODO
-        return null;
+        return new ResponseEntity<>(users.values(), HttpStatus.OK);
     }
 
     public ResponseEntity<User> getUser(String username) {
         //TODO
-        return null;
+        User u = users.get(username);
+        if (u == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(u, HttpStatus.OK);
     }
     
 }
